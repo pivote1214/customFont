@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "Custom Font Override",
+  "version": "1.0",
+  "description": "Override website fonts with user-specified settings.",
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["content.js"],
+      "css": ["style.css"]
+    }
+  ]
+}
