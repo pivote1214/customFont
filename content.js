@@ -37,7 +37,7 @@ else if (!isBlockedSite) {
   document.head.appendChild(styleElement);
 
   styleElement.textContent = `
-    body, p, h1, h2, h3, h4, h5, h6, input, textarea, select {
+    body, p, h1, h2, h3, h4, h5, h6, textarea, select {
       font-family: ${defaultFontFamily} !important;
     }
 
