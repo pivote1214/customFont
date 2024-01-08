@@ -5,14 +5,13 @@ const monospaceFontFamily = "Monaco, monospace";
 // List of blocked domains
 const blockedDomains = [
   "colab.research.google.com", 
-  "docs.google.com", 
-  "o365tsukuba-my.sharepoint.com"
 ];
 
 // List of special domains
 const specialDomains = [
   "notion.so", 
-  "ticktick.com"
+  "ticktick.com", 
+  "teams.microsoft.com", 
 ];
 
 // Check if the current domain is in the blockedDomains list
