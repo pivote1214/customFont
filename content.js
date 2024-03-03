@@ -1,24 +1,30 @@
 // Get user-specified font settings from storage or use default values
 const defaultFontFamily = "Noto Sans JP";
 const monospaceFontFamily = "Monaco, monospace";
+const mathFontFamily = "Tex Gyre PagellaX";
 
 // List of blocked domains
 const blockedDomains = [
   "colab.research.google.com", 
 ];
 
+// List of notion domains
+const notionDomains = [
+  "notion.so"
+];
+
 // List of special domains
 const specialDomains = [
-  "notion.so", 
   "ticktick.com", 
   "teams.microsoft.com", 
 ];
 
 // Check if the current domain is in the blockedDomains list
 const isBlockedSite = blockedDomains.some(domain => document.location.hostname.includes(domain));
+const isNotionSite = notionDomains.some(domain => document.location.hostname.includes(domain));
 const isSpecialSite = specialDomains.some(domain => document.location.hostname.includes(domain));
 
-// supecialDomainsの特殊設定
+// supecialDomains
 if (isSpecialSite) {
   const styleElement = document.createElement("style");
   styleElement.id = "custom-font-override";
@@ -28,6 +34,24 @@ if (isSpecialSite) {
     body, * {
       font-family: ${defaultFontFamily} !important;
     }
+  `;
+}
+else if (isNotionSite) {
+  const styleElement = document.createElement("style");
+  styleElement.id = "custom-font-override";
+  document.head.appendChild(styleElement);
+
+  styleElement.textContent = `
+    div.notion-selectable.notion-equation-block * {
+      font-family: ${mathFontFamily} !important;
+    }
+    div.notion-selectable.notion-code-block * {
+      font-family: ${monospaceFontFamily} ! important;
+    }
+    body, * {
+      font-family: ${defaultFontFamily} !important;
+    }
+
   `;
 }
 // If the current domain is not in the blockedDomains list, apply the custom font settings
@@ -40,7 +64,6 @@ else if (!isBlockedSite) {
     body, p, h1, h2, h3, h4, h5, h6, textarea, select {
       font-family: ${defaultFontFamily} !important;
     }
-
     pre, code, code * {
       font-family: ${monospaceFontFamily} !important;
     }
