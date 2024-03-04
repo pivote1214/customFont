@@ -1,6 +1,6 @@
 // Get user-specified font settings from storage or use default values
-const defaultFontFamily = "Noto Sans JP";
-const monospaceFontFamily = "Monaco, monospace";
+const defaultFontFamily = "Noto Sans JP Regular";
+const monospaceFontFamily = "Monaco, Menlo";
 const mathFontFamily = "Tex Gyre PagellaX";
 
 // List of blocked domains
@@ -15,6 +15,7 @@ const notionDomains = [
 
 // List of special domains
 const specialDomains = [
+  "google.com", 
   "ticktick.com", 
   "teams.microsoft.com", 
 ];
@@ -31,7 +32,7 @@ if (isSpecialSite) {
   document.head.appendChild(styleElement);
 
   styleElement.textContent = `
-    body, * {
+    body * {
       font-family: ${defaultFontFamily} !important;
     }
   `;
@@ -42,7 +43,7 @@ else if (isNotionSite) {
   document.head.appendChild(styleElement);
 
   styleElement.textContent = `
-    div.notion-selectable.notion-equation-block * {
+    span.katex-html * {
       font-family: ${mathFontFamily} !important;
     }
     div.notion-selectable.notion-code-block * {
@@ -51,7 +52,6 @@ else if (isNotionSite) {
     body, * {
       font-family: ${defaultFontFamily} !important;
     }
-
   `;
 }
 // If the current domain is not in the blockedDomains list, apply the custom font settings
