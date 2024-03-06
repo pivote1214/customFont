@@ -1,11 +1,12 @@
 // Get user-specified font settings from storage or use default values
-const defaultFontFamily = "Noto Sans JP Regular";
+const defaultFontFamily = "Noto Sans JP";
 const monospaceFontFamily = "Monaco, Menlo";
 const mathFontFamily = "Tex Gyre PagellaX";
 
 // List of blocked domains
 const blockedDomains = [
   "colab.research.google.com", 
+  "caledar.google.com", 
 ];
 
 // List of notion domains
@@ -15,7 +16,7 @@ const notionDomains = [
 
 // List of special domains
 const specialDomains = [
-  "google.com", 
+  "drive.google.com", 
   "ticktick.com", 
   "teams.microsoft.com", 
 ];
