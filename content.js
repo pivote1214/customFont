@@ -3,12 +3,6 @@ const defaultFontFamily = "Noto Sans JP";
 const monospaceFontFamily = "Monaco, Menlo";
 const mathFontFamily = "Tex Gyre PagellaX";
 
-// List of blocked domains
-const blockedDomains = [
-  "colab.research.google.com", 
-  "caledar.google.com", 
-];
-
 // List of notion domains
 const notionDomains = [
   "notion.so"
@@ -17,12 +11,10 @@ const notionDomains = [
 // List of special domains
 const specialDomains = [
   "drive.google.com", 
-  "ticktick.com", 
   "teams.microsoft.com", 
 ];
 
 // Check if the current domain is in the blockedDomains list
-const isBlockedSite = blockedDomains.some(domain => document.location.hostname.includes(domain));
 const isNotionSite = notionDomains.some(domain => document.location.hostname.includes(domain));
 const isSpecialSite = specialDomains.some(domain => document.location.hostname.includes(domain));
 
@@ -56,7 +48,7 @@ else if (isNotionSite) {
   `;
 }
 // If the current domain is not in the blockedDomains list, apply the custom font settings
-else if (!isBlockedSite) {
+else {
   const styleElement = document.createElement("style");
   styleElement.id = "custom-font-override";
   document.head.appendChild(styleElement);
