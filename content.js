@@ -1,64 +1,91 @@
-// Get user-specified font settings from storage or use default values
-const defaultFontFamily = "Noto Sans JP";
-const monospaceFontFamily = "Monaco, Menlo";
-const mathFontFamily = "Tex Gyre PagellaX";
+const STYLE_ID = "custom-font-override";
 
-// List of notion domains
-const notionDomains = [
-  "notion.so"
-];
+const FONT_FAMILIES = {
+  default: "Noto Sans JP, sans-serif",
+  monospace: "Cascadia Code, monospace",
+  math: "STIX Two Math, serif",
+};
 
-// List of special domains
-const specialDomains = [
-  "drive.google.com", 
-  "teams.microsoft.com", 
-];
+const SELECTORS = {
+  default: [
+    "body",
+    "p",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+    "h5",
+    "h6",
+    "li",
+    "a",
+    "button",
+    "label",
+    "input",
+    "textarea",
+    "select",
+    "blockquote",
+    "figcaption",
+    "table",
+    "th",
+    "td",
+    "dt",
+    "dd",
+  ],
+  monospace: [
+    "pre",
+    "code",
+    "kbd",
+    "samp",
+    "tt",
+    '[class*="code"]',
+    '[class*="Code"]',
+    '[class*="monospace"]',
+    '[class*="Monospace"]',
+  ],
+  math: [
+    "math",
+    "mrow",
+    "mi",
+    "mn",
+    "mo",
+    "ms",
+    "mtext",
+    "msup",
+    "msub",
+    "mfrac",
+    '[class*="katex"]',
+    '[class*="KaTeX"]',
+    '[class*="MathJax"]',
+    '[class*="mathjax"]',
+    "[data-math]",
+    '[aria-label*="math"]',
+    '[aria-label*="Math"]',
+  ],
+};
 
-// Check if the current domain is in the blockedDomains list
-const isNotionSite = notionDomains.some(domain => document.location.hostname.includes(domain));
-const isSpecialSite = specialDomains.some(domain => document.location.hostname.includes(domain));
+function buildCss() {
+  const defaultRule = `${SELECTORS.default.join(", ")} { font-family: ${FONT_FAMILIES.default} !important; }`;
+  const monospaceRule = `${SELECTORS.monospace.join(", ")} { font-family: ${FONT_FAMILIES.monospace} !important; }`;
+  const mathRule = `${SELECTORS.math.join(", ")} { font-family: ${FONT_FAMILIES.math} !important; }`;
 
-// supecialDomains
-if (isSpecialSite) {
-  const styleElement = document.createElement("style");
-  styleElement.id = "custom-font-override";
-  document.head.appendChild(styleElement);
-
-  styleElement.textContent = `
-    body * {
-      font-family: ${defaultFontFamily} !important;
-    }
-  `;
+  // Order is important: math > monospace > default.
+  return [defaultRule, monospaceRule, mathRule].join("\n");
 }
-else if (isNotionSite) {
-  const styleElement = document.createElement("style");
-  styleElement.id = "custom-font-override";
-  document.head.appendChild(styleElement);
 
-  styleElement.textContent = `
-    span.katex-html * {
-      font-family: ${mathFontFamily} !important;
-    }
-    div.notion-selectable.notion-code-block * {
-      font-family: ${monospaceFontFamily} ! important;
-    }
-    body, * {
-      font-family: ${defaultFontFamily} !important;
-    }
-  `;
-}
-// If the current domain is not in the blockedDomains list, apply the custom font settings
-else {
-  const styleElement = document.createElement("style");
-  styleElement.id = "custom-font-override";
-  document.head.appendChild(styleElement);
+function injectOrUpdateStyle() {
+  const root = document.head || document.documentElement;
+  if (!root) {
+    return;
+  }
 
-  styleElement.textContent = `
-    body, p, h1, h2, h3, h4, h5, h6, textarea, select {
-      font-family: ${defaultFontFamily} !important;
-    }
-    pre, code, code * {
-      font-family: ${monospaceFontFamily} !important;
-    }
-  `;
+  let styleElement = document.getElementById(STYLE_ID);
+  if (!styleElement) {
+    styleElement = document.createElement("style");
+    styleElement.id = STYLE_ID;
+    root.appendChild(styleElement);
+  }
+
+  styleElement.textContent = buildCss();
 }
+
+injectOrUpdateStyle();
