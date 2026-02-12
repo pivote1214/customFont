@@ -30,6 +30,9 @@ const SELECTORS = {
     "td",
     "dt",
     "dd",
+    // Notion固有: notion-クラスを持つ要素とその子孫のみ対象(他サイトには影響しない)
+    '[class*="notion-"]',
+    '[class*="notion-"] *',
   ],
   monospace: [
     "pre",
@@ -82,10 +85,44 @@ function injectOrUpdateStyle() {
   if (!styleElement) {
     styleElement = document.createElement("style");
     styleElement.id = STYLE_ID;
-    root.appendChild(styleElement);
   }
 
   styleElement.textContent = buildCss();
+  // 常に<head>末尾に配置し、カスケード優先度を最大化
+  root.appendChild(styleElement);
+}
+
+function ensureStylePriority() {
+  const root = document.head || document.documentElement;
+  if (!root) return;
+
+  const styleElement = document.getElementById(STYLE_ID);
+  if (!styleElement) {
+    injectOrUpdateStyle();
+    return;
+  }
+
+  // <head>の末尾でなければ移動
+  if (styleElement !== root.lastElementChild) {
+    root.appendChild(styleElement);
+  }
+}
+
+function startObserver() {
+  const target = document.head || document.documentElement;
+  if (!target) return;
+
+  const observer = new MutationObserver((mutations) => {
+    for (const mutation of mutations) {
+      if (mutation.type === "childList") {
+        ensureStylePriority();
+        return;
+      }
+    }
+  });
+
+  observer.observe(target, { childList: true });
 }
 
 injectOrUpdateStyle();
+startObserver();
